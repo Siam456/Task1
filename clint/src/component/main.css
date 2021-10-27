@@ -32,11 +32,19 @@ input{
     border-bottom: 1px solid gray;
     padding: 10px 0;
 }
-
-.sinput{
-    width: 30%;
-    height: 60%;
+.inputField{
+    border: 1px solid black;
+    margin: 0 0 0 30px;
 }
+.sinput{
+    width: 20%;
+    height: 50%;
+    text-align: right;
+    margin: 0;
+    border: none;
+}
+
+
 
 @media only screen and (max-width: 400px) {
     .grid-container {

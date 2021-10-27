@@ -25,7 +25,8 @@ const Main = () => {
         VATTK: 0,
         RDTK: 0,
         total: 0,
-    })
+    });
+    
 
     useEffect(() => {
         //console.log('axios')
@@ -108,43 +109,14 @@ const Main = () => {
         
         
         if(name === 'cd'){
-            if(value.includes('%')){
-                const index = value.indexOf("%");
-                const str1 = value.slice(0,index);
-                const str2 = value.slice(index+1, value.length);
-                const newValue = Number(str1+str2);
-                //alert(newValue)
-                setproduct((prev) => {
-                    const cd = obj.AV * (newValue / 100);
-                    const rd = obj.AV * (prev.RD / 100);
-                    const sd = (obj.AV + (obj.AV * (newValue / 100)) +(obj.AV * (prev.RD / 100))) * (obj.AV * (prev.SD / 100));
-                    const vat = (obj.AV + (obj.AV * (newValue / 100)) +(obj.AV * (prev.RD / 100)) + (obj.AV * (prev.SD / 100))) * (obj.AV * (prev.VAT / 100));
-                    const total = cd + rd + sd + vat;
-                    //console.log(product.SDTK)
-                    return({
-                        productID: prev.productID,
-                        despription: prev.despription,
-                        CD: newValue,
-                        SD: prev.SD,
-                        VAT: prev.VAT,
-                        RD: prev.RD,
-                        CDTK: (cd).toFixed(2),
-                        SDTK: sd.toFixed(2),
-                        VATTK: vat.toFixed(2), 
-                        RDTK: rd.toFixed(2),
-                        total: (total).toFixed(2),
-                        
-                    })
-                })
-            } else{
-                const newValue = Number(value);
+            const newValue = Number(value);
                 setproduct((prev) => {
                    
                     const cd = obj.AV * (newValue / 100);
                     const rd = obj.AV * (prev.RD / 100);
-                    const sd = (obj.AV + (obj.AV * (newValue / 100)) +(obj.AV * (prev.RD / 100))) * (obj.AV * (prev.SD / 100));
-                    const vat = (obj.AV + (obj.AV * (newValue / 100)) +(obj.AV * (prev.RD / 100)) + (obj.AV * (prev.SD / 100))) * (obj.AV * (prev.VAT / 100));
-                    const total = cd + rd + sd + vat;
+                    const sd = (obj.AV + cd + rd) * (obj.AV * (prev.SD / 100));
+                    const vat = (obj.AV + cd + rd + sd) * (obj.AV * (prev.VAT / 100));
+                    const total = obj.AV + cd + rd + sd + vat;
                     //console.log(product.SDTK)
                     return({
                         productID: prev.productID,
@@ -161,45 +133,15 @@ const Main = () => {
                         
                     })
                 })
-            }
         } else if(name === 'rd'){
-            if(value.includes('%')){
-                const index = value.indexOf("%");
-                const str1 = value.slice(0,index);
-                const str2 = value.slice(index+1, value.length);
-                const newValue = Number(str1+str2);
-                //alert(newValue)
-                setproduct((prev) => {
-                    const cd = obj.AV * (prev.CD / 100);
-                    const rd = obj.AV * (newValue / 100);
-                    const sd = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (newValue / 100))) * (obj.AV * (prev.SD / 100));
-                    const vat = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (newValue / 100)) + (obj.AV * (prev.SD / 100))) * (obj.AV * (prev.VAT / 100));
-                    const total = cd + rd + sd + vat;
-                    //console.log(product.SDTK)
-                    return({
-                        productID: prev.productID,
-                        despription: prev.despription,
-                        CD: prev.CD,
-                        SD: prev.SD,
-                        VAT: prev.VAT,
-                        RD: newValue,
-                        CDTK: (cd).toFixed(2),
-                        SDTK: sd.toFixed(2),
-                        VATTK: vat.toFixed(2), 
-                        RDTK: rd.toFixed(2),
-                        total: (total).toFixed(2),
-                        
-                    })
-                })
-            } else{
-                const newValue = Number(value);
+            const newValue = Number(value);
                 setproduct((prev) => {
                    
                     const cd = obj.AV * (prev.CD / 100);
                     const rd = obj.AV * (newValue / 100);
-                    const sd = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (newValue / 100))) * (obj.AV * (prev.SD / 100));
-                    const vat = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (newValue / 100)) + (obj.AV * (prev.SD / 100))) * (obj.AV * (prev.VAT / 100));
-                    const total = cd + rd + sd + vat;
+                    const sd = (obj.AV + cd +rd) * (obj.AV * (prev.SD / 100));
+                    const vat = (obj.AV + cd +rd + sd) * (obj.AV * (prev.VAT / 100));
+                    const total = obj.AV + cd + rd + sd + vat;
                     //console.log(product.SDTK)
                     return({
                         productID: prev.productID,
@@ -216,45 +158,15 @@ const Main = () => {
                         
                     })
                 })
-            }
         } else if(name === 'sd'){
-            if(value.includes('%')){
-                const index = value.indexOf("%");
-                const str1 = value.slice(0,index);
-                const str2 = value.slice(index+1, value.length);
-                const newValue = Number(str1+str2);
-                //alert(newValue)
-                setproduct((prev) => {
-                    const cd = obj.AV * (prev.CD / 100);
-                    const rd = obj.AV * (prev.RD / 100);
-                    const sd = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (prev.RD / 100))) * (obj.AV * (newValue / 100));
-                    const vat = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (prev.RD / 100)) + (obj.AV * (newValue / 100))) * (obj.AV * (prev.VAT / 100));
-                    const total = cd + rd + sd + vat;
-                    //console.log(product.SDTK)
-                    return({
-                        productID: prev.productID,
-                        despription: prev.despription,
-                        CD: prev.CD,
-                        SD: newValue,
-                        VAT: prev.VAT,
-                        RD: prev.RD,
-                        CDTK: (cd).toFixed(2),
-                        SDTK: sd.toFixed(2),
-                        VATTK: vat.toFixed(2), 
-                        RDTK: rd.toFixed(2),
-                        total: (total).toFixed(2),
-                        
-                    })
-                })
-            } else{
-                const newValue = Number(value);
+            const newValue = Number(value);
                 setproduct((prev) => {
                    
                     const cd = obj.AV * (prev.CD / 100);
                     const rd = obj.AV * (prev.RD / 100);
-                    const sd = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (prev.RD / 100))) * (obj.AV * (newValue / 100));
-                    const vat = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (prev.RD / 100)) + (obj.AV * (newValue / 100))) * (obj.AV * (prev.VAT / 100));
-                    const total = cd + rd + sd + vat;
+                    const sd = (obj.AV + cd +rd) * (obj.AV * (newValue / 100));
+                    const vat = (obj.AV + cd +rd + sd) * (obj.AV * (prev.VAT / 100));
+                    const total = obj.AV + cd + rd + sd + vat;
                     //console.log(product.SDTK)
                     return({
                         productID: prev.productID,
@@ -271,45 +183,15 @@ const Main = () => {
                         
                     })
                 })
-            }
         }  else if(name === 'vat'){
-            if(value.includes('%')){
-                const index = value.indexOf("%");
-                const str1 = value.slice(0,index);
-                const str2 = value.slice(index+1, value.length);
-                const newValue = Number(str1+str2);
-                //alert(newValue)
-                setproduct((prev) => {
-                    const cd = obj.AV * (prev.CD / 100);
-                    const rd = obj.AV * (prev.RD / 100);
-                    const sd = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (prev.RD / 100))) * (obj.AV * (prev.SD / 100));
-                    const vat = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (prev.RD / 100)) + (obj.AV * (prev.SD / 100))) * (obj.AV * (newValue / 100));
-                    const total = cd + rd + sd + vat;
-                    //console.log(product.SDTK)
-                    return({
-                        productID: prev.productID,
-                        despription: prev.despription,
-                        CD: prev.CD,
-                        SD: prev.SD,
-                        VAT: newValue,
-                        RD: prev.RD,
-                        CDTK: (cd).toFixed(2),
-                        SDTK: sd.toFixed(2),
-                        VATTK: vat.toFixed(2), 
-                        RDTK: rd.toFixed(2),
-                        total: (total).toFixed(2),
-                        
-                    })
-                })
-            } else{
-                const newValue = Number(value);
+            const newValue = Number(value);
                 setproduct((prev) => {
                    
                     const cd = obj.AV * (prev.CD / 100);
                     const rd = obj.AV * (prev.RD / 100);
-                    const sd = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (prev.RD / 100))) * (obj.AV * (prev.SD / 100));
-                    const vat = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (prev.RD / 100)) + (obj.AV * (prev.SD / 100))) * (obj.AV * (newValue / 100));
-                    const total = cd + rd + sd + vat;
+                    const sd = (obj.AV + cd + rd) * (obj.AV * (prev.SD / 100));
+                    const vat = (obj.AV + cd + rd + sd) * (obj.AV * (newValue / 100));
+                    const total = obj.AV + cd + rd + sd + vat;
                     //console.log(product.SDTK)
                     return({
                         productID: prev.productID,
@@ -326,7 +208,6 @@ const Main = () => {
                         
                     })
                 })
-            }
         }
 
         //console.log(typeof(obj.AV));
@@ -379,28 +260,28 @@ const Main = () => {
                             <div className='flexAndSpaceBetween'>
                                 <div>
                                     <span>CD</span>
-                                    <input onChange={changeData} name='cd' style={{textAlign: 'center'}} value={`${product.CD}%`} id='cdid' className='sinput' />
+                                    <span className='inputField'><input autoComplete='off' type='number' onChange={changeData} name='cd' value={product.CD} id='cdid' className='sinput' /><span>%</span></span>
                                 </div>
                                 <input style={{textAlign: 'right'}} value={`${product.CDTK===0 ? product.CDTK+'.00' : product.CDTK}TK`} />
                             </div>
                             <div className='flexAndSpaceBetween'>
                                 <div>
                                     <span>RD</span>
-                                    <input onChange={changeData} name='rd' style={{textAlign: 'center'}} value={`${product.RD}%`} className='sinput' />
+                                    <span className='inputField'><input autoComplete='off' type='number' onChange={changeData} name='rd' value={product.RD} className='sinput' /><span>%</span></span>
                                 </div>
                                 <input style={{textAlign: 'right'}} value={`${product.RDTK===0 ? product.RDTK+'.00' : product.RDTK}TK`} />
                             </div>
                             <div className='flexAndSpaceBetween'>
                                 <div>
                                     <span>SD</span>
-                                    <input onChange={changeData} name='sd' style={{textAlign: 'center'}} value={`${product.SD}%`} className='sinput' />
+                                    <span className='inputField'><input autoComplete='off' type='number' onChange={changeData} name='sd' value={product.SD} className='sinput' /><span>%</span></span>
                                 </div>
                                 <input style={{textAlign: 'right'}} value={`${product.SDTK===0 ? product.SDTK+'.00' : product.SDTK}TK`} />
                             </div>
                             <div className='flexAndSpaceBetween'>
                                 <div>
                                     <span>VAT</span>
-                                    <input onChange={changeData} name='vat' style={{textAlign: 'center', marginLeft: '22px'}} value={`${product.VAT}%`} className='sinput' />
+                                    <span style={{marginLeft: '22px'}} className='inputField'><input autoComplete='off' type='number' onChange={changeData} name='vat' value={product.VAT} className='sinput' /><span>%</span></span>
                                 </div>
                                 <input style={{textAlign: 'right'}} value={`${product.VATTK===0 ? product.VATTK+'.00' : product.VATTK}TK`} />
                             </div>
