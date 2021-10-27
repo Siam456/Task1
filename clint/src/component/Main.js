@@ -35,7 +35,7 @@ const Main = () => {
                 //console.log(obj + ''); 
                 axios.get(`/api/${obj.productID}`)
                 .then(res => {
-                    //console.log(res)
+                    console.log(res)
                     setproduct({
                         productID: res.data.products[0].productID,
                         despription: res.data.products[0].despription,
@@ -47,13 +47,13 @@ const Main = () => {
                         SDTK: ((obj.AV + res.data.products[0].CD/100 + res.data.products[0].RD/100) * res.data.products[0].SD/100).toFixed(2),
                         VATTK: ((obj.AV + res.data.products[0].CD/100 + res.data.products[0].RD/100 + (obj.AV + res.data.products[0].CD/100 + res.data.products[0].RD/100) * res.data.products[0].SD/100) * res.data.products[0].VAT/100).toFixed(2),
                         RDTK: (obj.AV * res.data.products[0].RD/100).toFixed(2),
-                        total: (obj.AV * res.data.products[0].CD/100) + ((obj.AV + res.data.products[0].CD/100 + res.data.products[0].RD/100) * res.data.products[0].SD/100) + ((obj.AV + res.data.products[0].CD/100 + res.data.products[0].RD/100 + (obj.AV + res.data.products[0].CD/100 + res.data.products[0].RD/100) * res.data.products[0].SD/100) * res.data.products[0].VAT/100) + obj.AV * res.data.products[0].RD/100 + obj.AV,
+                        total: ((obj.AV * res.data.products[0].CD/100) + ((obj.AV + res.data.products[0].CD/100 + res.data.products[0].RD/100) * res.data.products[0].SD/100) + ((obj.AV + res.data.products[0].CD/100 + res.data.products[0].RD/100 + (obj.AV + res.data.products[0].CD/100 + res.data.products[0].RD/100) * res.data.products[0].SD/100) * res.data.products[0].VAT/100) + obj.AV * res.data.products[0].RD/100 + obj.AV).toFixed(2),
                     })
                 })
-                .catch(err => console.log(err))
+                .catch(err => console.log(err));
         }
         
-    })
+    }, [`/api/${obj.productID}`])
 
     //set value 
     const setValue = (e) => {
@@ -100,6 +100,236 @@ const Main = () => {
                 })
             })
         }
+    }
+
+    //change CD RD SD VAT value
+    const changeData = (e) => {
+        const { value, name } = e.target;
+        
+        
+        if(name === 'cd'){
+            if(value.includes('%')){
+                const index = value.indexOf("%");
+                const str1 = value.slice(0,index);
+                const str2 = value.slice(index+1, value.length);
+                const newValue = Number(str1+str2);
+                //alert(newValue)
+                setproduct((prev) => {
+                    const cd = obj.AV * (newValue / 100);
+                    const rd = obj.AV * (prev.RD / 100);
+                    const sd = (obj.AV + (obj.AV * (newValue / 100)) +(obj.AV * (prev.RD / 100))) * (obj.AV * (prev.SD / 100));
+                    const vat = (obj.AV + (obj.AV * (newValue / 100)) +(obj.AV * (prev.RD / 100)) + (obj.AV * (prev.SD / 100))) * (obj.AV * (prev.VAT / 100));
+                    const total = cd + rd + sd + vat;
+                    //console.log(product.SDTK)
+                    return({
+                        productID: prev.productID,
+                        despription: prev.despription,
+                        CD: newValue,
+                        SD: prev.SD,
+                        VAT: prev.VAT,
+                        RD: prev.RD,
+                        CDTK: (cd).toFixed(2),
+                        SDTK: sd.toFixed(2),
+                        VATTK: vat.toFixed(2), 
+                        RDTK: rd.toFixed(2),
+                        total: (total).toFixed(2),
+                        
+                    })
+                })
+            } else{
+                const newValue = Number(value);
+                setproduct((prev) => {
+                   
+                    const cd = obj.AV * (newValue / 100);
+                    const rd = obj.AV * (prev.RD / 100);
+                    const sd = (obj.AV + (obj.AV * (newValue / 100)) +(obj.AV * (prev.RD / 100))) * (obj.AV * (prev.SD / 100));
+                    const vat = (obj.AV + (obj.AV * (newValue / 100)) +(obj.AV * (prev.RD / 100)) + (obj.AV * (prev.SD / 100))) * (obj.AV * (prev.VAT / 100));
+                    const total = cd + rd + sd + vat;
+                    //console.log(product.SDTK)
+                    return({
+                        productID: prev.productID,
+                        despription: prev.despription,
+                        CD: newValue,
+                        SD: prev.SD,
+                        VAT: prev.VAT,
+                        RD: prev.RD,
+                        CDTK: (cd).toFixed(2),
+                        SDTK: sd.toFixed(2),
+                        VATTK: vat.toFixed(2), 
+                        RDTK: rd.toFixed(2),
+                        total: (total).toFixed(2),
+                        
+                    })
+                })
+            }
+        } else if(name === 'rd'){
+            if(value.includes('%')){
+                const index = value.indexOf("%");
+                const str1 = value.slice(0,index);
+                const str2 = value.slice(index+1, value.length);
+                const newValue = Number(str1+str2);
+                //alert(newValue)
+                setproduct((prev) => {
+                    const cd = obj.AV * (prev.CD / 100);
+                    const rd = obj.AV * (newValue / 100);
+                    const sd = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (newValue / 100))) * (obj.AV * (prev.SD / 100));
+                    const vat = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (newValue / 100)) + (obj.AV * (prev.SD / 100))) * (obj.AV * (prev.VAT / 100));
+                    const total = cd + rd + sd + vat;
+                    //console.log(product.SDTK)
+                    return({
+                        productID: prev.productID,
+                        despription: prev.despription,
+                        CD: prev.CD,
+                        SD: prev.SD,
+                        VAT: prev.VAT,
+                        RD: newValue,
+                        CDTK: (cd).toFixed(2),
+                        SDTK: sd.toFixed(2),
+                        VATTK: vat.toFixed(2), 
+                        RDTK: rd.toFixed(2),
+                        total: (total).toFixed(2),
+                        
+                    })
+                })
+            } else{
+                const newValue = Number(value);
+                setproduct((prev) => {
+                   
+                    const cd = obj.AV * (prev.CD / 100);
+                    const rd = obj.AV * (newValue / 100);
+                    const sd = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (newValue / 100))) * (obj.AV * (prev.SD / 100));
+                    const vat = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (newValue / 100)) + (obj.AV * (prev.SD / 100))) * (obj.AV * (prev.VAT / 100));
+                    const total = cd + rd + sd + vat;
+                    //console.log(product.SDTK)
+                    return({
+                        productID: prev.productID,
+                        despription: prev.despription,
+                        CD: prev.CD,
+                        SD: prev.SD,
+                        VAT: prev.VAT,
+                        RD: newValue,
+                        CDTK: (cd).toFixed(2),
+                        SDTK: sd.toFixed(2),
+                        VATTK: vat.toFixed(2), 
+                        RDTK: rd.toFixed(2),
+                        total: (total).toFixed(2),
+                        
+                    })
+                })
+            }
+        } else if(name === 'sd'){
+            if(value.includes('%')){
+                const index = value.indexOf("%");
+                const str1 = value.slice(0,index);
+                const str2 = value.slice(index+1, value.length);
+                const newValue = Number(str1+str2);
+                //alert(newValue)
+                setproduct((prev) => {
+                    const cd = obj.AV * (prev.CD / 100);
+                    const rd = obj.AV * (prev.RD / 100);
+                    const sd = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (prev.RD / 100))) * (obj.AV * (newValue / 100));
+                    const vat = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (prev.RD / 100)) + (obj.AV * (newValue / 100))) * (obj.AV * (prev.VAT / 100));
+                    const total = cd + rd + sd + vat;
+                    //console.log(product.SDTK)
+                    return({
+                        productID: prev.productID,
+                        despription: prev.despription,
+                        CD: prev.CD,
+                        SD: newValue,
+                        VAT: prev.VAT,
+                        RD: prev.RD,
+                        CDTK: (cd).toFixed(2),
+                        SDTK: sd.toFixed(2),
+                        VATTK: vat.toFixed(2), 
+                        RDTK: rd.toFixed(2),
+                        total: (total).toFixed(2),
+                        
+                    })
+                })
+            } else{
+                const newValue = Number(value);
+                setproduct((prev) => {
+                   
+                    const cd = obj.AV * (prev.CD / 100);
+                    const rd = obj.AV * (prev.RD / 100);
+                    const sd = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (prev.RD / 100))) * (obj.AV * (newValue / 100));
+                    const vat = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (prev.RD / 100)) + (obj.AV * (newValue / 100))) * (obj.AV * (prev.VAT / 100));
+                    const total = cd + rd + sd + vat;
+                    //console.log(product.SDTK)
+                    return({
+                        productID: prev.productID,
+                        despription: prev.despription,
+                        CD: prev.CD,
+                        SD: newValue,
+                        VAT: prev.VAT,
+                        RD: prev.RD,
+                        CDTK: (cd).toFixed(2),
+                        SDTK: sd.toFixed(2),
+                        VATTK: vat.toFixed(2), 
+                        RDTK: rd.toFixed(2),
+                        total: (total).toFixed(2),
+                        
+                    })
+                })
+            }
+        }  else if(name === 'vat'){
+            if(value.includes('%')){
+                const index = value.indexOf("%");
+                const str1 = value.slice(0,index);
+                const str2 = value.slice(index+1, value.length);
+                const newValue = Number(str1+str2);
+                //alert(newValue)
+                setproduct((prev) => {
+                    const cd = obj.AV * (prev.CD / 100);
+                    const rd = obj.AV * (prev.RD / 100);
+                    const sd = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (prev.RD / 100))) * (obj.AV * (prev.SD / 100));
+                    const vat = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (prev.RD / 100)) + (obj.AV * (prev.SD / 100))) * (obj.AV * (newValue / 100));
+                    const total = cd + rd + sd + vat;
+                    //console.log(product.SDTK)
+                    return({
+                        productID: prev.productID,
+                        despription: prev.despription,
+                        CD: prev.CD,
+                        SD: prev.SD,
+                        VAT: newValue,
+                        RD: prev.RD,
+                        CDTK: (cd).toFixed(2),
+                        SDTK: sd.toFixed(2),
+                        VATTK: vat.toFixed(2), 
+                        RDTK: rd.toFixed(2),
+                        total: (total).toFixed(2),
+                        
+                    })
+                })
+            } else{
+                const newValue = Number(value);
+                setproduct((prev) => {
+                   
+                    const cd = obj.AV * (prev.CD / 100);
+                    const rd = obj.AV * (prev.RD / 100);
+                    const sd = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (prev.RD / 100))) * (obj.AV * (prev.SD / 100));
+                    const vat = (obj.AV + (obj.AV * (prev.CD / 100)) +(obj.AV * (prev.RD / 100)) + (obj.AV * (prev.SD / 100))) * (obj.AV * (newValue / 100));
+                    const total = cd + rd + sd + vat;
+                    //console.log(product.SDTK)
+                    return({
+                        productID: prev.productID,
+                        despription: prev.despription,
+                        CD: prev.CD,
+                        SD: prev.SD,
+                        VAT: newValue,
+                        RD: prev.RD,
+                        CDTK: (cd).toFixed(2),
+                        SDTK: sd.toFixed(2),
+                        VATTK: vat.toFixed(2), 
+                        RDTK: rd.toFixed(2),
+                        total: (total).toFixed(2),
+                        
+                    })
+                })
+            }
+        }
+
+        //console.log(typeof(obj.AV));
     }
     return (
         <div id='mainSection'>
@@ -149,28 +379,28 @@ const Main = () => {
                             <div className='flexAndSpaceBetween'>
                                 <div>
                                     <span>CD</span>
-                                    <input style={{textAlign: 'center'}} value={`${product.CD}%`} className='sinput' />
+                                    <input onChange={changeData} name='cd' style={{textAlign: 'center'}} value={`${product.CD}%`} id='cdid' className='sinput' />
                                 </div>
                                 <input style={{textAlign: 'right'}} value={`${product.CDTK===0 ? product.CDTK+'.00' : product.CDTK}TK`} />
                             </div>
                             <div className='flexAndSpaceBetween'>
                                 <div>
                                     <span>RD</span>
-                                    <input style={{textAlign: 'center'}} value={`${product.RD}%`} className='sinput' />
+                                    <input onChange={changeData} name='rd' style={{textAlign: 'center'}} value={`${product.RD}%`} className='sinput' />
                                 </div>
                                 <input style={{textAlign: 'right'}} value={`${product.RDTK===0 ? product.RDTK+'.00' : product.RDTK}TK`} />
                             </div>
                             <div className='flexAndSpaceBetween'>
                                 <div>
                                     <span>SD</span>
-                                    <input style={{textAlign: 'center'}} value={`${product.SD}%`} className='sinput' />
+                                    <input onChange={changeData} name='sd' style={{textAlign: 'center'}} value={`${product.SD}%`} className='sinput' />
                                 </div>
                                 <input style={{textAlign: 'right'}} value={`${product.SDTK===0 ? product.SDTK+'.00' : product.SDTK}TK`} />
                             </div>
                             <div className='flexAndSpaceBetween'>
                                 <div>
                                     <span>VAT</span>
-                                    <input style={{textAlign: 'center', marginLeft: '22px'}} value={`${product.VAT}%`} className='sinput' />
+                                    <input onChange={changeData} name='vat' style={{textAlign: 'center', marginLeft: '22px'}} value={`${product.VAT}%`} className='sinput' />
                                 </div>
                                 <input style={{textAlign: 'right'}} value={`${product.VATTK===0 ? product.VATTK+'.00' : product.VATTK}TK`} />
                             </div>
